@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+
+    <!-- BOOTSTRAP 4.4 CDN -->
+    <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossorigin="anonymous">
+
+    <!-- YOUR CUSTOM CSS IF YOU WANT -->
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-dark px-3">
+        <a class="navbar-brand" href="/">Home</a>
+        <a class="nav-link text-light" href="/signin">Sign In</a>
+        <a class="nav-link text-light" href="/signup">Sign Up</a>
+        <a class="nav-link text-light" href="/profile">Profile</a>
+    </nav>
+
+    <div class="container mt-4">
+        <%- body %>
+    </div>
+
+</body>
+</html>
