@@ -1,7 +1,19 @@
 <%- include("layout", { 
-    title: "Signin page", 
+    title: "Sign In", 
     body: `
-        <h1>(signin.ejs)</h1>
-        <p>test</p>
+        <h1>Sign In</h1>
+        <form action="/signin" method="POST">
+            <label>Username</label><br>
+            <input type="text" name="username" placeholder="Enter your Username" required><br>
+
+            <label>Password</label><br>
+            <input type="password" name="password" placeholder="Enter your Password" required><br>
+
+            <button type="submit" class="btn btn-primary mt-2">Sign In</button>
+        </form>
+
+        <p class="mt-3">Don't have an account?</p>
+        <a href="/signup" class="btn btn-secondary">Sign Up</a>
+        <a href="/" class="btn btn-link">Back to Home</a>
     ` 
 }) %>

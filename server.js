@@ -1,40 +1,68 @@
 const express = require("express");
+const { Pool } = require("pg");
+const cors = require("cors");
 const server = express();
-server.set("view engine", "ejs");
+
 server.use(express.urlencoded({ extended: true }));
+server.use(express.json());
+server.use(cors());
 
-server.get("/", (request, response) => {
-	response.render("index"); //home page
+const db = new Pool({ 
+    user: "postgres",
+    host: "localhost",
+    database: "MusicAppDB",
+    password: "weasel2002",
+    port: 5432,
 });
 
-server.get("/signup", (request, response) => {
-	response.render("signup"); //signup page
+server.set("view engine", "ejs");
+
+server.get("/", (req, res) => res.render("index"));
+
+server.get("/signup", (req, res) => res.render("signup"));
+
+server.get("/signin", (req, res) => res.render("signin"));
+
+server.get("/profile", (req, res) => res.render("profile"));
+
+server.post("/signup", async (req, res) => {
+	let username,password,name,email,existingUser;
+    username = req.body.username;
+	password = req.body.password;
+	email = req.body.email;
+
+    try {
+        existingUser = await db.query("SELECT * FROM users WHERE username = $1",[username]);
+        if (existingUser.rows.length > 0) {
+            res.redirect("/signup") 
+			} else {
+			await db.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",[username, email, password]);
+			res.redirect("/signin")
+			}
+    } catch (err) {
+        console.error(err);
+		res.redirect("/signup")
+    }
 });
 
-server.get("/signin", (request, response) => {
-	response.render("signin"); //signin page
+server.post("/signin", async (req, res) => {
+    let username, password, result;
+	username = req.body.username;
+	password = req.body.password;
+
+    try {
+        result = await db.query("SELECT * FROM users WHERE username = $1 AND password = $2",[username, password]);
+        if (result.rows.length === 0) {
+			return res.redirect("/signin")
+        }
+		res.redirect("/")
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error during signin");
+		res.redirect("/signin")
+    }
 });
 
-server.get("/profile", (request, response) => {
-	response.render("profile"); //user profile page
+server.listen(3000, "0.0.0.0", () => {
+    console.log("Server running on http://localhost:3000");
 });
-
-server.get("/playlists", (request, response) => {
-	response.render("playlists"); //list playlists page
-});
-
-server.get("/playlists/create", (request, response) => {
-	response.render("createPlaylist"); //create playlist page
-});
-
-server.post("/signup", (request, response) => {
-	//signup logic goes here later
-	response.send("Signup not implemented yet.");
-});
-
-server.post("/signin", (request, response) => {
-	//signin logic goes here later
-	response.send("Signin not implemented yet.");
-});
-
-server.listen(3000, () => console.log("Running on http://localhost:3000"));
