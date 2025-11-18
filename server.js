@@ -45,6 +45,9 @@ server.get("/profile", (req, res) => res.render("profile"));
 
 server.get("/playlists", (req, res) => res.render("playlists", { playlists: userplaylists, currentpl: req.query.playlistId }));
 
+server.get("/createPlaylist", (req, res) => res.render("createPlaylists", { playlists: userplaylists }));
+
+
 server.post("/signup", async(req, res) => {
     let username, password, name, email, existingUser;
     username = req.body.username;
