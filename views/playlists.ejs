@@ -1,7 +1,49 @@
 <%- include("layout", { 
-    title: "Playlists page", 
-    body: `
-        <h1>(playlists.ejs)</h1>
-        <p>test</p>
-    ` 
+    title: "Playlists page",
+    body: ``
 }) %>
+    <%- include("sidebar", { 
+    title: "Home page", 
+    playlists: playlists}) %>
+
+        <% try { %>
+            <div class="card" style="width: 100%;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= playlists[currentpl]["name"] %>
+                    </h5>
+                    <!-- <p class="card-text">  </p> -->
+                    <a href="#" class="btn btn-primary">Play</a>
+                </div>
+            </div>
+
+            <div class="list-group">
+                <% for(let i = playlists[currentpl]["songs"].length-1; i >= 0; i--) { %>
+                    <div class="song">
+
+
+                        <a href="/playlists?playlistId=<%= currentpl %>&playSongId=1">
+                            <button type="button" class="list-group-item list-group-item-action">
+                                    <%= playlists[currentpl]["songs"][i]["songname"];%> | <%= playlists[currentpl]["songs"][i]["artist"];%>
+                                </button>
+                        </a>
+
+
+
+
+
+                    </div>
+
+
+                    <%}%>
+            </div>
+            <%} catch (error){%>
+
+                <%console.log(error);%>
+
+                    <% }%>
+
+                        </div>
+
+                        </html>

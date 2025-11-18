@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+
+    <!-- BOOTSTRAP 4.4 CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- YOUR CUSTOM CSS IF YOU WANT -->
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<html>
+<div class="d-flex">
+    <div class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
+        <h4>Menu</h4>
+        <% try {%>
+            <a class="nav-link text-white" href="/createPlaylist">Create Playlist</a>
+            <a class="nav-link text-white" href="/playlists">View All Playlists</a>
+
+            <a class="nav-link text-white">Playlists:</a>
+            <div class="list-group">
+                <% for(let i = playlists.length-1; i >= 0; i--) { %>
+                    <div class="singlepost">
+
+
+                        <a href="/playlists?playlistId=<%= playlists[i].id %>">
+                            <button type="button" class="list-group-item list-group-item-action">
+                                    <%= playlists[i]["name"];%>
+                                </button>
+                        </a>
+
+
+
+
+
+                    </div>
+
+
+                    <%}%>
+                        <!-- <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+                    The current button
+                 </button>  -->
+
+                        <%} catch (error) {}%>
+            </div>
+    </div>
