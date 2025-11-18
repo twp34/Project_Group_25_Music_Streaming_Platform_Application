@@ -1,7 +1,92 @@
-<%- include("layout", { 
-    title: "Profile page", 
-    body: `
-        <h1>(profile.ejs)</h1>
-        <p>test</p>
-    `
-}) %>
+<%- include('layout', { title: 'Your Profile' }) %>
+
+<div class="profile-page">
+
+  <section>
+    <h1>Profile Page</h1>
+    <p><strong>Username:</strong> <%= user.username %></p>
+    <p><strong>Full Name:</strong> <%= user.full_name %></p>
+    <p><strong>Email:</strong> <%= user.email %></p>
+  </section>
+
+  <hr>
+
+ 
+  <section>
+    <h2>Create a New Playlist</h2>
+    
+    <form action="/playlists/create" method="POST">
+      <div>
+        <label for="playlistName">Playlist Name:</label>
+        <input type="text" id="playlistName" name="name" required>
+      </div>
+      <div>
+        <label for="playlistDescription">Description:</label>
+        <textarea id="playlistDescription" name="description" rows="3"></textarea>
+      </div>
+      <button type="submit">Create Playlist</button>
+    </form>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Your Playlists</h2>
+
+    <% if (playlists && playlists.length > 0) { %>
+      <ul>
+        <% playlists.forEach(function(playlist) { %>
+          <li>
+            <h3><%= playlist.name %></h3>
+
+            <% if (playlist.songs && playlist.songs.length > 0) { %>
+              <ul>
+                <% playlist.songs.forEach(function(song) { %>
+                  <li>
+                    <strong><%= song.songname %></strong> - <%= song.artist %>
+                  </li>
+                <% }) %>
+              </ul>
+            <% } else { %>
+              <p>No songs in this playlist yet.</p>
+            <% } %>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>You don't have any playlists yet.</p>
+    <% } %>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Listening History</h2>
+
+    <% if (history && history.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Song</th>
+            <th>Artist</th>
+            <th>Played At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% history.forEach(function(item) { %>
+            <tr>
+              <td><%= item.song_title %></td>
+              <td><%= item.artist %></td>
+              <td><%= item.played_at %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No listening history yet.</p>
+    <% } %>
+  </section>
+
+</div>
+
+

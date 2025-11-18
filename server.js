@@ -3,6 +3,8 @@ const { Pool } = require("pg");
 const cors = require("cors");
 const server = express();
 
+
+server.use(express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 server.use(cors());
@@ -28,22 +30,83 @@ const songs_in_SecondPlaylist = [{ songid: 2, songname: "Walk of Life", artist: 
     { songid: 6, songname: "Willow Tree Lullaby", artist: "America" }
 ];
 
-const userplaylists = [{ id: 0, name: 'First Playlist!', songs: songs_in_FirstPlaylist }, { id: 1, name: 'Second Playlist!', songs: songs_in_SecondPlaylist }]; // this is just temp solution before we set up database
+const userplaylists = [
+    { id: 0, name: 'First Playlist!', songs: songs_in_FirstPlaylist }, 
+    { id: 1, name: 'Second Playlist!', songs: songs_in_SecondPlaylist }]; // this is just temp solution before we set up database
 
 
 const audiolocation = `C:/audio/whereaudiois/`
 
+// Temporary 
+const fakeUser = {
+    id: 1,
+    username: "hyyjinxx",
+    full_name: "Ally Wiedoff",
+    email: "ally@example.com"
+};
+
+const fakeHistory = [
+    {id: 1, song_title: "For What It's Worth", artist: "Buffalo Springfield", played_at: "2025-11-10 15:30"},
+    { id: 2, song_title: "Walk of Life", artist: "Dire Straits", played_at: "2025-11-11 09:10" },
+    { id: 3, song_title: "Peaceful Easy Feeling", artist: "The Eagles", played_at: "2025-11-12 21:05" }
+];
+
+
 server.set("view engine", "ejs");
 
-server.get("/", (req, res) => res.render("index", { playlists: userplaylists }));
+server.get("/", (req, res) => {
+    res.render("index", {
+        playlists: userplaylists,
+        body: ""          
+    });
+});
 
-server.get("/signup", (req, res) => res.render("signup"));
+server.get("/signup", (req, res) => {
+    res.render("signup", {
+        body: ""          
+    });
+});
 
-server.get("/signin", (req, res) => res.render("signin"));
+server.get("/signin", (req, res) => {
+    res.render("signin", {
+        body: ""          
+    });
+});
 
-server.get("/profile", (req, res) => res.render("profile"));
+server.get("/profile", (req, res) => {
+    res.render("profile", {
+        user: fakeUser,
+        playlists: userplaylists,
+        history: fakeHistory,
+        body: "",
+        title: "Your Profile"  
+    });
+});
 
-server.get("/playlists", (req, res) => res.render("playlists", { playlists: userplaylists, currentpl: req.query.playlistId }));
+server.get("/playlists", (req, res) => {
+    res.render("playlists", {
+        playlists: userplaylists,
+        currentpl: req.query.playlistId,
+        body: ""                  
+    });
+});
+
+server.post("/playlists/create", (req, res) => {
+    const { name, description } = req.body;
+
+    if (!name || name.trim() === "") {
+        return res.redirect("/profile");
+    }
+
+    const newPlaylist = {
+        id: userplaylists.length,
+        name: name.trim(),
+        songs: [] // empty for now
+    };
+
+    userplaylists.push(newPlaylist);
+    res.redirect("/profile");
+});
 
 server.post("/signup", async(req, res) => {
     let username, password, name, email, existingUser;
@@ -86,3 +149,5 @@ server.post("/signin", async(req, res) => {
 server.listen(3000, "0.0.0.0", () => {
     console.log("Server running on http://localhost:3000");
 });
+
+
