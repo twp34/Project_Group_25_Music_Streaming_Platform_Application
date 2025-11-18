@@ -6,9 +6,23 @@
     <%- include("sidebar", { 
     title: "Home page", 
     playlists: playlists}) %>
+        <div class="flex-column p-3" style="width: 100%;">
+            <h3>Create New Playlist</h3>
 
-        <h3>Create New Playlist</h3>
 
+            <form action="/createPlaylist" method="POST">
+                <div>
+                    <label for="playlistName">Playlist Name:</label>
+                    <input type="text" id="playlistName" name="name" required>
+                </div>
+                <div>
+                    <label for="playlistDescription">Description:</label>
+                    <textarea id="playlistDescription" name="description" rows="3"></textarea>
+                </div>
+                <button type="submit">Create Playlist</button>
+            </form>
+            </section>
+        </div>
         </div>
 
         </html>
