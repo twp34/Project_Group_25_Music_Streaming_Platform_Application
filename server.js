@@ -5,7 +5,7 @@ const session = require("express-session");
 const server = express();
 
 server.use(session({
-	serversession: "musicapp_secret",
+	secret: "musicapp_secret",
 	resave: false,
 	saveUninitialized: true
 }));

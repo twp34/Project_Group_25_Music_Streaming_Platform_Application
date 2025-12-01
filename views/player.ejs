@@ -1,0 +1,27 @@
+<div class="player-container">
+    <div class="player-info">
+        
+        <img src="public/images/sabina.jpg" alt="Album">
+        <div>
+            <p id="song-title">Song Title</p>
+            <p id="artist-name">Artist Name</p>
+        </div>
+    </div>
+
+    <div class="player-controls">
+        <button id="prevBtn">⏮</button>
+        <button id="playBtn">⏯</button>
+        <button id="nextBtn">⏭</button>
+    </div>
+
+    <input type="range" id="progressBar" class="progress-bar">
+</div>
+
+
+<script>
+    const playlist = <%- JSON.stringify(userplaylists[0].songs) %>;
+</script>
+
+
+<script src="/player.js"></script>
+
