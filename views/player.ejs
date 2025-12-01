@@ -1,10 +1,10 @@
 <div class="player-container">
     <div class="player-info">
-        
-        <img src="public/images/sabina.jpg" alt="Album">
+        <img src="/images/sabina.jpg" alt="Album">
         <div>
             <p id="song-title">Song Title</p>
             <p id="artist-name">Artist Name</p>
+            <div id="song-rating"></div>
         </div>
     </div>
 
@@ -15,13 +15,8 @@
     </div>
 
     <input type="range" id="progressBar" class="progress-bar">
+    <audio id="audio-player"></audio>
 </div>
 
 
-<script>
-    const playlist = <%- JSON.stringify(userplaylists[0].songs) %>;
-</script>
-
-
-<script src="/player.js"></script>
 
