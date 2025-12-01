@@ -5,7 +5,7 @@ const session = require("express-session");
 const server = express();
 
 server.use(session({
-	serversession: "musicapp_secret",
+	secret: "musicapp_secret",
 	resave: false,
 	saveUninitialized: true
 }));
@@ -26,18 +26,18 @@ const pool = new Pool({
 let audioLocation = `/public/musicMP3s/`;
 
 let songs_in_FirstPlaylist = [
-	{ songid: 11, songname: "For What It's Worth", artist: "Buffalo Springfield" },
-	{ songid: 6, songname: "Willow Tree Lullaby", artist: "America" },
-	{ songid: 39, songname: "Rainy Day", artist: "America" },
-	{ songid: 23, songname: "Bitter Sweat Symphony", artist: "The Verve" }
+	{ songid: 11, songname: "ForWhatItsWorth", artist: "Buffalo Springfield", rating: 4 },
+	{ songid: 6, songname: "Willow Tree Lullaby", artist: "America", rating: 5 },
+	{ songid: 39, songname: "Rainy Day", artist: "America", rating: 3 },
+	{ songid: 23, songname: "Bitter Sweat Symphony", artist: "The Verve", rating: 4 }
 ];
 
 let songs_in_SecondPlaylist = [
-	{ songid: 2, songname: "Walk of Life", artist: "Dire Straits" },
-	{ songid: 89, songname: "Solsbury Hill", artist: "Peter Gabriel" },
-	{ songid: 45, songname: "Saturday in the Park", artist: "Chicago" },
-	{ songid: 123, songname: "Peaceful Easy Feeling", artist: "The Eagles" },
-	{ songid: 6, songname: "Willow Tree Lullaby", artist: "America" }
+	{ songid: 2, songname: "WalkOfLife", artist: "Dire Straits", rating: 2 },
+	{ songid: 89, songname: "Solsbury Hill", artist: "Peter Gabriel", rating: 5 },
+	{ songid: 45, songname: "Saturday in the Park", artist: "Chicago", rating: 4 },
+	{ songid: 123, songname: "PeacefulEasyFeeling", artist: "The Eagles", rating: 4 },
+	{ songid: 6, songname: "Willow Tree Lullaby", artist: "America", rating: 3 }
 ];
 
 let userplaylists = [
@@ -62,8 +62,14 @@ let fakeHistory = [
 server.set("view engine", "ejs");
 
 server.get("/", (req, res) => {
-	res.render("index", { playlists: userplaylists, body: "" });
+    res.render("index", { 
+        playlists: userplaylists, 
+        userplaylists: userplaylists,  
+        body: "",
+        title: "Home"              
+    });
 });
+
 
 server.get("/signup", (req, res) => {
 	res.render("signup", { body: "" });
@@ -86,7 +92,13 @@ server.get("/profile", (req, res) => {
 
 server.get("/playlists", (req, res) => {
 	let currentPl = req.query.playlistId;
-	res.render("playlists", { playlists: userplaylists, currentpl: currentPl, body: "" });
+	res.render("playlists", { 
+        playlists: userplaylists, 
+        userplaylists: userplaylists,  
+        currentpl: currentPl, 
+        body: "",
+        title: "Playlists"
+    });
 });
 
 server.get("/createPlaylist", (req, res) => {
