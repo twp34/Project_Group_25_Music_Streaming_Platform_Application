@@ -86,6 +86,7 @@ server.get("/", (req, res) => {
 
 });
 
+
 server.get("/signup", (req, res) => {
     res.render("signup", { body: "" });
 });
