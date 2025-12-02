@@ -7,15 +7,15 @@
     playlists: playlists}) %>
 
         <% try { %>
-            <%if(playlists[currentpl]["name"]){%>
+            <%if(playlists[currentpl-1]["name"]){%>
                 <div></div>
                 <% } %>
                     <div class="flex-column p-3" style="width: 100%;">
                         <div class="card mb-3" style="width: 100%;">
-                            <img src="..." class="card-img-top" alt="Image Here">
+                            <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 20%;">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <%= playlists[currentpl]["name"] %>
+                                    <%= playlists[currentpl-1]["name"] %>
                                 </h5>
                                 <!-- <p class="card-text">  </p> -->
                                 <a href="#" class="btn btn-primary">Play</a>
@@ -52,7 +52,7 @@
                         <div class="flex-column p-3" style="width: 100%;">
                             <% for(let i = playlists.length-1; i >= 0; i--) { %>
                                 <div class="card" style="width: 18rem;">
-                                    <img src="..." class="card-img-top" alt="Image Here">
+                                    <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 100%;">
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <%= playlists[i]["name"];%>
