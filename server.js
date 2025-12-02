@@ -23,7 +23,117 @@ const pool = new Pool({
     password: "kkk123",
     port: 5432
 });
+async function initializeDatabase() {
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(50) UNIQUE NOT NULL,
+            full_name VARCHAR(100),
+            email VARCHAR(120),
+            password VARCHAR(200) NOT NULL
+        );
 
+        CREATE TABLE IF NOT EXISTS songs (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(200) NOT NULL,
+            artist VARCHAR(200),
+            album VARCHAR(200),
+            genre VARCHAR(100),
+            duration INTEGER,
+            audio_path TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS playlists (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id),
+            name VARCHAR(200) NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS playlist_songs (
+            id SERIAL PRIMARY KEY,
+            playlist_id INTEGER REFERENCES playlists(id),
+            song_id INTEGER REFERENCES songs(id)
+        );
+
+        CREATE TABLE IF NOT EXISTS ratings (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id),
+            song_id INTEGER REFERENCES songs(id),
+            rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+            review TEXT,
+            created_at TIMESTAMP DEFAULT NOW()
+        );
+    `);
+
+    await pool.query(`
+        INSERT INTO songs (title, artist, album, genre, duration, audio_path)
+        VALUES 
+            ('For What It''s Worth', 'Buffalo Springfield', 'Buffalo Springfield', 'Rock', 173, ''),
+            ('Willow Tree Lullaby', 'America', 'Holiday', 'Folk Rock', 200, ''),
+            ('Rainy Day', 'America', 'Heartbreak Holiday', 'Soft Rock', 215, ''),
+            ('Bitter Sweat Symphony', 'The Verve', 'Urban Hymns', 'Alternative Rock', 337, ''),
+            ('Walk of Life', 'Dire Straits', 'Brothers in Arms', 'Rock', 250, ''),
+            ('Solsbury Hill', 'Peter Gabriel', 'Peter Gabriel (3)', 'Progressive Rock', 267, ''),
+            ('Saturday in the Park', 'Chicago', 'Chicago V', 'Pop Rock', 227, ''),
+            ('Peaceful Easy Feeling', 'The Eagles', 'Eagles', 'Country Rock', 200, '')
+        ON CONFLICT DO NOTHING;
+    `);
+    try {
+        await pool.query(`
+        ALTER TABLE songs
+        ADD CONSTRAINT unique_song UNIQUE (title, artist);
+
+        ALTER TABLE playlists
+        ADD CONSTRAINT unique_user_playlist UNIQUE (user_id, name);
+
+        ALTER TABLE playlist_songs
+        ADD CONSTRAINT unique_playlist_song UNIQUE (playlist_id, song_id);
+        `);
+
+    } catch (err) {
+
+    }
+    await pool.query(`
+        INSERT INTO users (username, full_name, email, password)
+        VALUES ('defaultuser', 'Default User', 'default@example.com', 'password')
+        ON CONFLICT DO NOTHING;
+        `);
+    await pool.query(`
+        INSERT INTO playlists (user_id, name) VALUES
+        (1, 'Classic Rock Essentials'),
+        (1, 'Easy Listening Roadtrip'),
+        (1, '1970s Soft Rock'),
+        (1, 'Chill Acoustic Vibes'),
+        (1, 'Feel-Good Favorites'),
+        (1, 'America — Deep Cuts')
+        ON CONFLICT DO NOTHING;
+
+        INSERT INTO playlist_songs (playlist_id, song_id) VALUES
+        (1, 1),
+        (1, 5),
+        (1, 6),
+        (1, 7),
+        (2, 8),
+        (2, 7),
+        (2, 6),
+        (2, 5),
+        (3, 3),
+        (3, 2),
+        (3, 8),
+        (3, 7),
+        (4, 2),
+        (4, 3),
+        (4, 8),
+        (5, 7),
+        (5, 5),
+        (5, 8),
+        (6, 2),
+        (6, 3)
+        ON CONFLICT DO NOTHING;
+        `);
+    console.log("Database initialized.");
+}
+initializeDatabase();
 let audioLocation = `/public/musicMP3s/`;
 
 let songs_in_FirstPlaylist = [
@@ -61,14 +171,7 @@ let fakeHistory = [
     { id: 3, song_title: "Peaceful Easy Feeling", artist: "The Eagles", played_at: "2025-11-12 21:05" }
 ];
 
-pool.query("SELECT * FROM playlists")
-    .then(result => {
-        //userplaylists = result.rows;
-        console.log(result.rows);
-    })
-    .catch(err => {
-        console.error(err);
-    });
+
 
 server.set("view engine", "ejs");
 
