@@ -75,14 +75,15 @@ server.set("view engine", "ejs");
 server.get("/", async(req, res) => {
     const allResult = await pool.query("SELECT * FROM playlists LIMIT 20");
     const allplaylists = allResult.rows;
-
+    let user;
     if (req.session.user) {
         const userResult = await pool.query(
             "SELECT * FROM playlists WHERE user_id = $1", [req.session.user.id]
         );
         userplaylists = userResult.rows;
+        user = req.session.user;
     }
-    res.render("index", { playlists: userplaylists, allplaylists: allplaylists, body: "" });
+    res.render("index", { playlists: userplaylists, allplaylists: allplaylists, user: user, body: "" });
 
 });
 
