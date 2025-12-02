@@ -1,0 +1,39 @@
+<%- include("layout", { 
+    title: "Search", 
+    body: ``,
+    playlists: playlists,
+    user: user}) %>
+    <%- include("sidebar", { 
+    title: "Search", 
+    playlists: playlists}) %>
+        <div class="list-group mb-3" style="width: 50%">
+            <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between" style=" text-decoration: underline;" disabled>
+                <span> Song Title </span> 
+                <span> Artist</span>
+            </button>
+            <% for(let i = songs.length-1; i >= 0; i--) { %>
+
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div style="display: flex; width: 90%; justify-content: space-between;">
+                        <span><%= songs[i]["title"] %></span>
+                        <span><%= songs[i]["artist"] %></span>
+                    </div>
+                    <form action="/add-to-playlist" method="POST" style="margin:0; display: flex; gap: 5px; align-items: center;">
+                        <input type="hidden" name="songId" value="<%= songs[i].id %>">
+                        <select name="playlistId" required>
+                            <option value=""></option>
+                    <% playlists.forEach(playlist => { %>
+                        <option value="<%= playlist.id %>"><%= playlist["name"] %></option>
+                    <% }) %>
+                    </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                    </form>
+                </div>
+
+                <%}%>
+
+
+        </div>
+        </div>
+
+        </html>

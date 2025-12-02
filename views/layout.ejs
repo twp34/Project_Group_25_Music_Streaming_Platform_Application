@@ -25,8 +25,13 @@
         <% if(typeof user === "undefined") { %>
             <a class="nav-link text-light" href="/signin">Sign In</a>
             <a class="nav-link text-light" href="/signup">Sign Up</a>
-            <%}%>
-                <a class="nav-link text-light" href="/profile">Profile</a>
+            <%} else {%>
+                <form action="/search" method="GET" class="search-form form-inline my-2 my-lg-0">
+                    <input type="text" class="form-control mr-sm-2" name="searchsongs" placeholder="Search Songs..." required>
+                    <button class="btn btn-primary mt-2" type="submit">Search</button>
+                </form>
+                <%}%>
+                    <a class="nav-link text-light" href="/profile">Profile</a>
     </nav>
 
 

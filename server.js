@@ -114,9 +114,27 @@ server.get("/profile", (req, res) => {
 
 });
 
-server.get("/playlists", (req, res) => {
-    let currentPl = req.query.playlistId;
+server.get("/playlists", async(req, res) => {
 
+    let currentPl = req.query.playlistId;
+    console.log(currentPl)
+    let user;
+    let songs;
+    const allResult = await pool.query("SELECT * FROM playlists LIMIT 20");
+    const allplaylists = allResult.rows;
+    try {
+        const result = await pool.query(
+            `SELECT s.id, s.title, s.artist, s.album, s.genre, s.duration, s.audio_path
+             FROM playlist_songs ps
+             JOIN songs s ON ps.song_id = s.id
+             WHERE ps.playlist_id = $1`, [currentPl]
+        );
+
+        songs = result.rows;
+        //console.log(songs);
+    } catch (err) {
+        console.log(err);
+    }
     if (req.session.user) {
         pool.query("SELECT * FROM playlists WHERE user_id = $1", [req.session.user.id])
             .then(result => {
@@ -126,12 +144,20 @@ server.get("/playlists", (req, res) => {
             .catch(err => {
                 console.error(err);
             });
+
+
+        user = req.session.user;
+
     }
-    res.render("playlists", { playlists: userplaylists, currentpl: currentPl, body: "" });
+    res.render("playlists", { playlists: userplaylists, allplaylists: allplaylists, songs: songs, currentpl: currentPl, user: user, body: "" });
 });
 
 server.get("/createPlaylist", (req, res) => {
-    res.render("createPlaylists", { playlists: userplaylists });
+    let user;
+    if (req.session.user) {
+        user = req.session.user;
+    }
+    res.render("createPlaylists", { playlists: userplaylists, user: user });
 });
 
 server.post("/createPlaylist", async(req, res) => {
@@ -141,13 +167,14 @@ server.post("/createPlaylist", async(req, res) => {
     }
 
     const newPlaylist = { id: userplaylists.length, name: name.trim(), songs: [] };
-
+    let user;
     if (req.session.user) {
         try {
             await pool.query("INSERT INTO playlists (user_id, name) VALUES ($1, $2)", [req.session.user.id, name.trim()]);
         } catch (err) {
             console.error(err);
         }
+
     }
     res.redirect("/");
 });
@@ -209,6 +236,35 @@ server.post("/signin", async(req, res) => {
         res.status(500).send("Error during signin");
     }
 });
+
+server.get("/search", async(req, res) => {
+    let result;
+    try {
+        result = await pool.query(`SELECT * FROM songs WHERE title ILIKE '%' || $1
+             || '%' OR artist ILIKE '%' || $1 || '%' OR album ILIKE '%' || $1 || '%'`, [req.query.searchsongs]);
+    } catch (err) {
+        console.log(err);
+        result = { rows: [] };
+    }
+    res.render("search", { user: req.session.user, songs: result.rows, playlists: userplaylists });
+
+});
+
+server.post("/add-to-playlist", async(req, res) => {
+    console.log(req.body.playlistId);
+    console.log(req.body.songId);
+    try {
+        playlist_id = req.body.playlistId;
+        song_id = req.body.songId;
+        await pool.query(
+            "INSERT INTO playlist_songs (playlist_id, song_id) VALUES ($1, $2)", [playlist_id, song_id]
+        );
+        res.redirect(req.get('Referer') || '/');
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 
 server.listen(3000, "0.0.0.0", () => {
     console.log("Server running on http://localhost:3000");

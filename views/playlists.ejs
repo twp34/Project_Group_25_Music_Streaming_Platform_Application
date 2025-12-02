@@ -7,36 +7,38 @@
     playlists: playlists}) %>
 
         <% try { %>
-            <%if(playlists[currentpl-1]["name"]){%>
-                <div></div>
-                <% } %>
-                    <div class="flex-column p-3" style="width: 100%;">
-                        <div class="card mb-3" style="width: 100%;">
-                            <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 20%;">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <%= playlists[currentpl-1]["name"] %>
-                                </h5>
-                                <!-- <p class="card-text">  </p> -->
-                                <a href="#" class="btn btn-primary">Play</a>
-                            </div>
-                        </div>
 
-                        <div class="list-group mb-3" style="width: 50%">
-                            <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between" style=" text-decoration: underline;" disabled>
+            <%if(typeof currentpl !== "undefined"){%>
+                <div></div>
+
+                <div class="flex-column p-3" style="width: 100%;">
+                    <div class="card mb-3" style="width: 100%;">
+                        <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 20%;">
+                        <div class="card-body">
+                            <h5 class="card-title">
+
+                                <%= allplaylists.find(p => p.id == currentpl)?.name %>
+                            </h5>
+                            <!-- <p class="card-text">  </p> -->
+                            <a href="#" class="btn btn-primary">Play</a>
+                        </div>
+                    </div>
+
+                    <div class="list-group mb-3" style="width: 50%">
+                        <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between" style=" text-decoration: underline;" disabled>
                                     <span> Song Title </span> 
                                     <span> Artist</span>
                                 </button>
-                            <% for(let i = playlists[currentpl]["songs"].length-1; i >= 0; i--) { %>
+                        <% for(let i = songs.length-1; i >= 0; i--) { %>
 
 
 
-                                <a href="/playlists?playlistId=<%= currentpl %>&playSongId=<%= i %>">
-                                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between">
-                                    <span><%= playlists[currentpl]["songs"][i]["songname"];%></span> 
-                                    <span><%= playlists[currentpl]["songs"][i]["artist"];%></span>
+                            <a href="/playlists?playlistId=<%= currentpl %>&playSongId=<%= i %>">
+                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between">
+                                    <span><%= songs[i]["title"];%></span> 
+                                    <span><%= songs[i]["artist"];%></span>
                                 </button>
-                                </a>
+                            </a>
 
 
 
@@ -45,27 +47,35 @@
 
 
 
-                                <%}%>
-                        </div>
+                            <%}%>
                     </div>
-                    <%} catch (error){%>
-                        <div class="d-flex flex-wrap p-3" style="gap: 20px; width: 100%;">
-                            <% for(let i = playlists.length-1; i >= 0; i--) { %>
-                                <div class="card" style="width: 18rem;">
-                                    <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 100%;">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <%= playlists[i]["name"];%>
-                                        </h5>
-                                        <p class="card-text"></p>
-                                        <a href="/playlists?playlistId=<%= playlists[i].id %>" class="btn btn-primary">View</a>
-                                    </div>
+
+
+
+                </div>
+                <% } else { %>
+                    <div class="d-flex flex-wrap p-3" style="gap: 20px; width: 100%;">
+                        <% for(let i = playlists.length-1; i >= 0; i--) { %>
+                            <div class="card" style="width: 18rem;">
+                                <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 100%;">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= playlists[i]["name"];%>
+                                    </h5>
+                                    <p class="card-text"></p>
+                                    <a href="/playlists?playlistId=<%= playlists[i].id %>" class="btn btn-primary">View</a>
                                 </div>
-
-                                <% } %>
-                        </div>
-                        <% }%>
-
                             </div>
 
-                            </html>
+                            <% } %>
+                                <% } %>
+
+
+                                    <%} catch (error){%>
+
+                                        <%console.log(error)%>
+                                            <% }%>
+
+                    </div>
+
+                    </html>
