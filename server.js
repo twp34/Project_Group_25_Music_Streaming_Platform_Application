@@ -68,14 +68,14 @@ async function initializeDatabase() {
     await pool.query(`
         INSERT INTO songs (title, artist, album, genre, duration, audio_path)
         VALUES 
-            ('For What It''s Worth', 'Buffalo Springfield', 'Buffalo Springfield', 'Rock', 173, ''),
+            ('For What It''s Worth', 'Buffalo Springfield', 'Buffalo Springfield', 'Rock', 173, '\\musicMP3s\\ForWhatItsWorth.mp3'),
             ('Willow Tree Lullaby', 'America', 'Holiday', 'Folk Rock', 200, ''),
             ('Rainy Day', 'America', 'Heartbreak Holiday', 'Soft Rock', 215, ''),
             ('Bitter Sweat Symphony', 'The Verve', 'Urban Hymns', 'Alternative Rock', 337, ''),
-            ('Walk of Life', 'Dire Straits', 'Brothers in Arms', 'Rock', 250, ''),
+            ('Walk of Life', 'Dire Straits', 'Brothers in Arms', 'Rock', 250, '\\musicMP3s\\WalkOfLife.mp3'),
             ('Solsbury Hill', 'Peter Gabriel', 'Peter Gabriel (3)', 'Progressive Rock', 267, ''),
             ('Saturday in the Park', 'Chicago', 'Chicago V', 'Pop Rock', 227, ''),
-            ('Peaceful Easy Feeling', 'The Eagles', 'Eagles', 'Country Rock', 200, '')
+            ('Peaceful Easy Feeling', 'The Eagles', 'Eagles', 'Country Rock', 200, '\\musicMP3s\\PeacefulEasyFeeling.mp3')
         ON CONFLICT DO NOTHING;
     `);
     try {
@@ -89,7 +89,7 @@ async function initializeDatabase() {
         ALTER TABLE playlist_songs
         ADD CONSTRAINT unique_playlist_song UNIQUE (playlist_id, song_id);
         `);
-
+        console.log("Database initialized.");
     } catch (err) {
 
     }
@@ -100,12 +100,12 @@ async function initializeDatabase() {
         `);
     await pool.query(`
         INSERT INTO playlists (user_id, name) VALUES
-        (1, 'Classic Rock Essentials'),
-        (1, 'Easy Listening Roadtrip'),
-        (1, '1970s Soft Rock'),
-        (1, 'Chill Acoustic Vibes'),
-        (1, 'Feel-Good Favorites'),
-        (1, 'America — Deep Cuts')
+        (1, 'Classic Rock'),
+        (1, 'Roadtrip'),
+        (1, 'Soft Rock'),
+        (1, 'Vibes'),
+        (1, 'Favorites'),
+        (1, 'Best of America')
         ON CONFLICT DO NOTHING;
 
         INSERT INTO playlist_songs (playlist_id, song_id) VALUES
@@ -131,7 +131,7 @@ async function initializeDatabase() {
         (6, 3)
         ON CONFLICT DO NOTHING;
         `);
-    console.log("Database initialized.");
+
 }
 initializeDatabase();
 let audioLocation = `/public/musicMP3s/`;
