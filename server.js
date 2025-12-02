@@ -210,9 +210,7 @@ server.get("/profile", (req, res) => {
             title: "Your Profile"
         });
     } else {
-        res.render("profile", {
-            title: "Please login"
-        });
+        return res.redirect("/signin");
     }
 
 });
@@ -220,7 +218,7 @@ server.get("/profile", (req, res) => {
 server.get("/playlists", async(req, res) => {
 
     let currentPl = req.query.playlistId;
-    console.log(currentPl)
+    //console.log(currentPl)
     let user;
     let songs;
     const allResult = await pool.query("SELECT * FROM playlists LIMIT 20");
@@ -251,6 +249,8 @@ server.get("/playlists", async(req, res) => {
 
         user = req.session.user;
 
+    } else {
+        return res.redirect("/signin");
     }
     res.render("playlists", { playlists: userplaylists, allplaylists: allplaylists, songs: songs, currentpl: currentPl, user: user, body: "" });
 });
