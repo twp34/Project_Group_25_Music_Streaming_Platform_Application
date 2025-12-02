@@ -42,6 +42,7 @@ let songs_in_SecondPlaylist = [
 ];
 
 let userplaylists;
+let allplaylists;
 //     { id: 0, name: 'First Playlist!', songs: songs_in_FirstPlaylist },
 //     { id: 1, name: 'Second Playlist!', songs: songs_in_SecondPlaylist }
 // ]; // this is just temp solution before we set up database
@@ -71,18 +72,17 @@ pool.query("SELECT * FROM playlists")
 
 server.set("view engine", "ejs");
 
-server.get("/", (req, res) => {
+server.get("/", async(req, res) => {
+    const allResult = await pool.query("SELECT * FROM playlists LIMIT 20");
+    const allplaylists = allResult.rows;
+
     if (req.session.user) {
-        pool.query("SELECT * FROM playlists WHERE user_id = $1", [req.session.user.id])
-            .then(result => {
-                userplaylists = result.rows;
-                //console.log(result.rows);
-            })
-            .catch(err => {
-                console.error(err);
-            });
+        const userResult = await pool.query(
+            "SELECT * FROM playlists WHERE user_id = $1", [req.session.user.id]
+        );
+        userplaylists = userResult.rows;
     }
-    res.render("index", { playlists: userplaylists, body: "" });
+    res.render("index", { playlists: userplaylists, allplaylists: allplaylists, body: "" });
 
 });
 

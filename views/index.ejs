@@ -5,7 +5,26 @@
     <%- include("sidebar", { 
     title: "Home page", 
     playlists: playlists}) %>
-        <p></p>
+
+        <div class="d-flex flex-wrap p-3" style="gap: 20px; width: 100%;">
+            <h1 style="width: 100%;">Recently Made User Playlists:</h1>
+            <% try { %>
+
+                <% for(let i = allplaylists.length-1; i >= 0; i--) { %>
+                    <div class="card" style="width: 18rem;">
+                        <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 100%;">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= allplaylists[i]["name"];%>
+                            </h5>
+                            <p class="card-text"></p>
+                            <a href="/playlists?playlistId=<%= allplaylists[i].id %>" class="btn btn-primary">View</a>
+                        </div>
+                    </div>
+                    <%}
+                } catch (err) {%>
+                        <%console.log(err) }%>
+
         </div>
 
         </html>
