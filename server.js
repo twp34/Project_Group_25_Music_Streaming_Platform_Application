@@ -260,6 +260,10 @@ server.get("/createPlaylist", (req, res) => {
     if (req.session.user) {
         user = req.session.user;
     }
+
+    if (typeof user === "undefined") {
+        return res.redirect("/signup");
+    }
     res.render("createPlaylists", { playlists: userplaylists, user: user });
 });
 

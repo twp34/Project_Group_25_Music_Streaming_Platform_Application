@@ -54,7 +54,7 @@
 
                 </div>
                 <% } else { %>
-                    <div class="d-flex flex-wrap p-3" style="gap: 20px; width: 100%;">
+                    <div class="d-flex flex-wrap p-3 align-items-start" style="gap: 20px; width: 100%;">
                         <% for(let i = playlists.length-1; i >= 0; i--) { %>
                             <div class="card" style="width: 18rem;">
                                 <img src="/playlistImages/playlist.jpg" class="card-img-top" alt="Image Here" style="width: 100%;">
@@ -67,14 +67,18 @@
                                 </div>
                             </div>
 
-                            <% } %>
-                                <% } %>
+                            <% } if(playlists.length == 0) {%>
+                                <h1>You haven't made any playlists!</h1>
+                                <%}%>
+                                    <% } %>
 
 
-                                    <%} catch (error){%>
+                                        <%} catch (error){%>
 
-                                        <%console.log(error)%>
-                                            <% }%>
+                                            <%console.log(error)%>
+                                                <% }%>
+
+
 
                     </div>
 
