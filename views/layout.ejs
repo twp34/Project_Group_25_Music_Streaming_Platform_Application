@@ -37,11 +37,11 @@
         <% } %>
 
 
-            <% if (typeof userplaylists !== 'undefined' && userplaylists.length > 0) { %>
+            <% if (typeof playlists !== 'undefined' && playlists.length > 0) { %>
                 <%- include("player") %>
 
                     <script>
-                        const playlist = <%- JSON.stringify(userplaylists[0].songs) %>;
+                        const playlist = <%- JSON.stringify(playlists[0].songs) %>;
                     </script>
 
                     <script src="/player.js"></script>
