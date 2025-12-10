@@ -20,7 +20,7 @@ const pool = new Pool({
     user: "postgres",
     host: "localhost",
     database: "MusicAppDB",
-    password: "kkk123",
+    password: "weasel2002",
     port: 5432
 });
 async function initializeDatabase() {
@@ -213,6 +213,38 @@ server.get("/profile", (req, res) => {
         return res.redirect("/signin");
     }
 
+});
+
+server.get("/song/:id", async (req, res) => {
+	let songId = req.params.id
+	let songResult = await pool.query("SELECT * FROM songs WHERE id = $1", [songId]);
+
+    let ratingResult = await pool.query(`SELECT AVG(rating)::numeric(10,2) AS avg_rating, COUNT(*) AS total FROM ratings WHERE song_id = $1`, [songId]);
+
+    res.render("ratings", {
+        song: songResult.rows[0],
+        rating: ratingResult.rows[0],
+        user: req.session.user
+    });
+});
+
+server.post("/rate", async (req, res) => {
+	let song_id = req.body.song_id;
+	let rating = req.body.rating;
+	let userId = req.session.user.id;
+
+    try {
+        await pool.query(`
+            INSERT INTO ratings (user_id, song_id, rating)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (user_id, song_id) DO UPDATE
+            SET rating = EXCLUDED.rating
+        `, [userId, song_id, rating]);
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 server.get("/playlists", async(req, res) => {
